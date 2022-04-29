@@ -19,11 +19,21 @@
 		font-size: 16px;
 	}
 
+	.inline-item {
+		max-width: 100%;
+	}
+
 	.inline-item-after {
 		margin-left: 0.3rem;
 	}
 
 	.inline-item-before {
 		margin-right: 0.3rem;
+		max-width: 100%;
+	}
+
+	.text-truncate-inline {
+		white-space: normal;
+    	word-wrap: break-word;
 	}
 }
