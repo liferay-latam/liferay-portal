@@ -200,6 +200,7 @@
 		}
 
 		.custom-tooltip {
+			word-break: break-all;
 			background: $secondary-d1;
 			border-radius: 4px;
 			box-shadow: 0 2px 4px rgba(39, 40, 51, 0.2);
