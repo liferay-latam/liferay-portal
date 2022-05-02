@@ -38,6 +38,10 @@
 			box-shadow: 0 8px 16px 0 #27283329;
 		}
 
+		.node-icon, .lexicon-icon {
+		 	flex-shrink: 0;
+		 }
+
 		.node-icon {
 			height: 32px;
 			width: 32px;
