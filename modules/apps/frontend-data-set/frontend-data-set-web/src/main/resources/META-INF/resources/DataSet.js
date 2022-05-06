@@ -79,9 +79,10 @@ const DataSet = ({
 	nestedItemsKey,
 	nestedItemsReferenceKey,
 	onActionDropdownItemClick,
+	onBulkActionItemClick,
 	overrideEmptyResultView,
 	pagination,
-	selectedItems,
+	selectedItems: initialSelectedItemsValues,
 	selectedItemsKey,
 	selectionType,
 	showManagementBar,
@@ -121,7 +122,7 @@ const DataSet = ({
 	});
 
 	const [highlightedItemsValue, setHighlightedItemsValue] = useState([]);
-	const [items, setItems] = useState(itemsProp);
+	const [items, setItems] = useState(itemsProp || []);
 	const [itemsChanges, setItemsChanges] = useState({});
 	const [pageNumber, setPageNumber] = useState(
 		showPagination &&
@@ -129,8 +130,9 @@ const DataSet = ({
 	);
 	const [searchParam, setSearchParam] = useState('');
 	const [selectedItemsValue, setSelectedItemsValue] = useState(
-		selectedItems || []
+		initialSelectedItemsValues || []
 	);
+	const [selectedItems, setSelectedItems] = useState([]);
 	const [sorting, setSorting] = useState(sortingProp);
 	const [total, setTotal] = useState(0);
 	const [{activeView}, dispatch] = useContext(ViewsContext);
@@ -289,6 +291,24 @@ const DataSet = ({
 	}
 
 	useEffect(() => {
+		setSelectedItems((selectedItems) => {
+			return selectedItemsValue.map((value) => {
+				let selectedItem = items.find(
+					(item) => item[selectedItemsKey] === value
+				);
+
+				if (!selectedItem) {
+					selectedItem = selectedItems.find(
+						(item) => item[selectedItemsKey] === value
+					);
+				}
+
+				return selectedItem;
+			});
+		});
+	}, [selectedItemsValue, items, selectedItemsKey]);
+
+	useEffect(() => {
 		setComponentLoading(true);
 
 		requestComponent().then((component) => {
@@ -373,6 +393,7 @@ const DataSet = ({
 				selectAllItems={() =>
 					selectItems(items.map((item) => item[selectedItemsKey]))
 				}
+				selectedItems={selectedItems}
 				selectedItemsKey={selectedItemsKey}
 				selectedItemsValue={selectedItemsValue}
 				selectionType={selectionType}
@@ -643,6 +664,7 @@ const DataSet = ({
 				nestedItemsKey,
 				nestedItemsReferenceKey,
 				onActionDropdownItemClick,
+				onBulkActionItemClick,
 				openModal,
 				openSidePanel,
 				searchParam,
@@ -725,6 +747,7 @@ DataSet.propTypes = {
 	formId: PropTypes.string,
 	formName: PropTypes.string,
 	id: PropTypes.string.isRequired,
+	initialSelectedItemsValues: PropTypes.array,
 	inlineAddingSettings: PropTypes.shape({
 		apiURL: PropTypes.string.isRequired,
 		defaultBodyContent: PropTypes.object,
@@ -751,7 +774,6 @@ DataSet.propTypes = {
 		),
 		initialDelta: PropTypes.number.isRequired,
 	}),
-	selectedItems: PropTypes.array,
 	selectedItemsKey: PropTypes.string,
 	selectionType: PropTypes.oneOf(['single', 'multiple']),
 	showManagementBar: PropTypes.bool,

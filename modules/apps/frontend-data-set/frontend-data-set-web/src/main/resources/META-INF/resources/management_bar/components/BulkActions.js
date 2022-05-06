@@ -56,11 +56,15 @@ function BulkActions({
 	bulkActions,
 	fluid,
 	selectAllItems,
+	selectedItems,
 	selectedItemsKey,
 	selectedItemsValue,
 	total,
 }) {
-	const {actionParameterName} = useContext(DataSetContext);
+	const {actionParameterName, onBulkActionItemClick} = useContext(
+		DataSetContext
+	);
+
 	const [
 		currentSidePanelActionPayload,
 		setCurrentSidePanelActionPayload,
@@ -95,6 +99,15 @@ function BulkActions({
 			);
 
 			setCurrentSidePanelActionPayload(sidePanelActionPayload);
+		}
+		else if (onBulkActionItemClick) {
+			onBulkActionItemClick({
+				action: actionDefinition,
+				selectedData: {
+					items: selectedItems,
+					keyValues: selectedItemsValue,
+				},
+			});
 		}
 		else {
 			submit({
