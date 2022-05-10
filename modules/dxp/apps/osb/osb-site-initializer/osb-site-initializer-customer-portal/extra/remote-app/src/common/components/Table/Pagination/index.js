@@ -11,6 +11,7 @@
 
 import {ClayPaginationBarWithBasicItems} from '@clayui/pagination-bar';
 import classNames from 'classnames';
+import i18n from '../../../../common/I18n';
 import {getIconSpriteMap} from '../../../providers/ClayProvider';
 
 const TablePagination = ({
@@ -26,7 +27,7 @@ const TablePagination = ({
 }) => {
 	if (showDeltasDropDown || totalItems > itemsPerPage) {
 		const defaultLabels = {
-			paginationResults: 'Showing {0} to {1} of {2}',
+			paginationResults: 'showing {0} to {1} of {2}',
 			perPageItems: '{0} items',
 			selectPerPageItems: '{0} items',
 		};
@@ -54,9 +55,15 @@ const TablePagination = ({
 	}
 
 	return (
-		<p className="mb-4 mx-4 pagination-results">{`Showing ${
-			itemsPerPage * activePage + 1 - itemsPerPage
-		} to ${totalItems} of ${totalItems} entries.`}</p>
+		<>
+			<p className="mb-4 mx-4 pagination-results">
+				{i18n.sub('showing-x-to-x-of-x-entries', [
+					`${itemsPerPage * activePage + 1 - itemsPerPage}`,
+					totalItems,
+					totalItems,
+				])}
+			</p>
+		</>
 	);
 };
 

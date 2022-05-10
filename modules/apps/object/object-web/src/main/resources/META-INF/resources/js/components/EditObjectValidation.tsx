@@ -82,7 +82,7 @@ export default function EditObjectValidation({
 	return (
 		<SidePanelForm
 			onSubmit={handleSubmit}
-			title={initialValues.name?.[defaultLanguageId]}
+			title={initialValues.name?.[defaultLanguageId] as string}
 		>
 			<ClayTabs className="side-panel-iframe__tabs">
 				{TABS.map(({label}, index) => (
@@ -97,23 +97,27 @@ export default function EditObjectValidation({
 			</ClayTabs>
 
 			<ClayTabs.Content activeIndex={activeIndex} fade>
-				{TABS.map(({Component, label}, index) => (
-					<ClayTabs.TabPane key={index}>
-						<Component
-							componentLabel={label}
-							defaultLocale={defaultLocale!}
-							disabled={readOnly}
-							errors={errors}
-							handleChange={handleChange}
-							locales={availableLocales}
-							objectValidationRuleElements={
-								objectValidationRuleElements
-							}
-							setValues={setValues}
-							values={values}
-						/>
-					</ClayTabs.TabPane>
-				))}
+				{TABS.map(({Component, label}, index) =>
+					activeIndex === index ? (
+						<ClayTabs.TabPane key={index}>
+							<Component
+								componentLabel={label}
+								defaultLocale={defaultLocale!}
+								disabled={readOnly}
+								errors={errors}
+								handleChange={handleChange}
+								locales={availableLocales}
+								objectValidationRuleElements={
+									objectValidationRuleElements
+								}
+								setValues={setValues}
+								values={values}
+							/>
+						</ClayTabs.TabPane>
+					) : (
+						<React.Fragment key={index} />
+					)
+				)}
 			</ClayTabs.Content>
 		</SidePanelForm>
 	);
