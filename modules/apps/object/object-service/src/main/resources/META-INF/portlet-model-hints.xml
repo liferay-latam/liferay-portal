@@ -12,6 +12,7 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="objectDefinitionId" type="long" />
 		<field name="active" type="boolean" />
+		<field name="description" type="String" />
 		<field name="name" type="String" />
 		<field name="objectActionExecutorKey" type="String" />
 		<field name="objectActionTriggerKey" type="String" />
@@ -236,6 +237,20 @@
 		<field localized="true" name="label" type="String" />
 		<field name="objectFieldName" type="String" />
 		<field name="priority" type="int" />
+	</model>
+	<model name="com.liferay.object.model.ObjectViewFilterColumn">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="objectViewFilterColumnId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="objectViewId" type="long" />
+		<field name="filterType" type="String" />
+		<field name="json" type="String" />
+		<field name="objectFieldName" type="String" />
 	</model>
 	<model name="com.liferay.object.model.ObjectViewSortColumn">
 		<field name="mvccVersion" type="long" />

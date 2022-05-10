@@ -24,7 +24,7 @@ export type Sort = {
 	key: string;
 };
 
-type InitialState = {
+export type InitialState = {
 	filters: any;
 	keywords: string;
 	page: number;

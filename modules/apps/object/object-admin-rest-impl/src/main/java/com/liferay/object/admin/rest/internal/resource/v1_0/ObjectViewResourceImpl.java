@@ -16,6 +16,7 @@ package com.liferay.object.admin.rest.internal.resource.v1_0;
 
 import com.liferay.object.admin.rest.dto.v1_0.ObjectView;
 import com.liferay.object.admin.rest.dto.v1_0.ObjectViewColumn;
+import com.liferay.object.admin.rest.dto.v1_0.ObjectViewFilterColumn;
 import com.liferay.object.admin.rest.dto.v1_0.ObjectViewSortColumn;
 import com.liferay.object.admin.rest.internal.dto.v1_0.util.ObjectViewUtil;
 import com.liferay.object.admin.rest.resource.v1_0.ObjectViewResource;
@@ -23,11 +24,14 @@ import com.liferay.object.admin.rest.resource.v1_0.util.NameMapUtil;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.service.ObjectViewService;
 import com.liferay.object.service.persistence.ObjectViewColumnPersistence;
+import com.liferay.object.service.persistence.ObjectViewFilterColumnPersistence;
 import com.liferay.object.service.persistence.ObjectViewSortColumnPersistence;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.LocalizedMapUtil;
@@ -96,6 +100,12 @@ public class ObjectViewResourceImpl extends BaseObjectViewResourceImpl {
 			Long objectDefinitionId, ObjectView objectView)
 		throws Exception {
 
+		if (ArrayUtil.isNotEmpty(objectView.getObjectViewFilterColumns()) &&
+			!GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-144957"))) {
+
+			throw new UnsupportedOperationException();
+		}
+
 		return _toObjectView(
 			_objectViewService.addObjectView(
 				objectDefinitionId,
@@ -104,6 +114,9 @@ public class ObjectViewResourceImpl extends BaseObjectViewResourceImpl {
 				transformToList(
 					objectView.getObjectViewColumns(),
 					this::_toObjectViewColumn),
+				transformToList(
+					objectView.getObjectViewFilterColumns(),
+					this::_toObjectViewFilterColumn),
 				transformToList(
 					objectView.getObjectViewSortColumns(),
 					this::_toObjectViewSortColumn)));
@@ -119,12 +132,19 @@ public class ObjectViewResourceImpl extends BaseObjectViewResourceImpl {
 				objectView.getObjectDefinitionId(), false,
 				NameMapUtil.copy(objectView.getNameMap()),
 				objectView.getObjectViewColumns(),
+				objectView.getObjectViewFilterColumns(),
 				objectView.getObjectViewSortColumns()));
 	}
 
 	@Override
 	public ObjectView putObjectView(Long objectViewId, ObjectView objectView)
 		throws Exception {
+
+		if (ArrayUtil.isNotEmpty(objectView.getObjectViewFilterColumns()) &&
+			!GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-144957"))) {
+
+			throw new UnsupportedOperationException();
+		}
 
 		return _toObjectView(
 			_objectViewService.updateObjectView(
@@ -133,6 +153,9 @@ public class ObjectViewResourceImpl extends BaseObjectViewResourceImpl {
 				transformToList(
 					objectView.getObjectViewColumns(),
 					this::_toObjectViewColumn),
+				transformToList(
+					objectView.getObjectViewFilterColumns(),
+					this::_toObjectViewFilterColumn),
 				transformToList(
 					objectView.getObjectViewSortColumns(),
 					this::_toObjectViewSortColumn)));
@@ -187,6 +210,24 @@ public class ObjectViewResourceImpl extends BaseObjectViewResourceImpl {
 		return serviceBuilderObjectViewColumn;
 	}
 
+	private com.liferay.object.model.ObjectViewFilterColumn
+		_toObjectViewFilterColumn(
+			ObjectViewFilterColumn objectViewFilterColumn) {
+
+		com.liferay.object.model.ObjectViewFilterColumn
+			serviceBuilderObjectViewFilterColumn =
+				_objectViewFilterColumnPersistence.create(0L);
+
+		serviceBuilderObjectViewFilterColumn.setFilterType(
+			objectViewFilterColumn.getFilterTypeAsString());
+		serviceBuilderObjectViewFilterColumn.setJson(
+			objectViewFilterColumn.getJson());
+		serviceBuilderObjectViewFilterColumn.setObjectFieldName(
+			objectViewFilterColumn.getObjectFieldName());
+
+		return serviceBuilderObjectViewFilterColumn;
+	}
+
 	private com.liferay.object.model.ObjectViewSortColumn
 		_toObjectViewSortColumn(ObjectViewSortColumn objectViewSortColumn) {
 
@@ -206,6 +247,10 @@ public class ObjectViewResourceImpl extends BaseObjectViewResourceImpl {
 
 	@Reference
 	private ObjectViewColumnPersistence _objectViewColumnPersistence;
+
+	@Reference
+	private ObjectViewFilterColumnPersistence
+		_objectViewFilterColumnPersistence;
 
 	@Reference
 	private ObjectViewService _objectViewService;
