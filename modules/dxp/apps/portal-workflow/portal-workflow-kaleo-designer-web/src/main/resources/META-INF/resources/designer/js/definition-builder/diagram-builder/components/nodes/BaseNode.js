@@ -37,6 +37,7 @@ export default function BaseNode({
 	isDragging,
 	label,
 	newNode,
+	nodeTypeClassName,
 	notifications,
 	script,
 	sourcePosition,
@@ -105,7 +106,7 @@ export default function BaseNode({
 	}
 
 	if (selectedItem?.id === id) {
-		className = `${className} selected`;
+		nodeTypeClassName = `${nodeTypeClassName} selected`;
 	}
 
 	let nodeLabel;
@@ -156,7 +157,7 @@ export default function BaseNode({
 	}
 
 	return (
-		<div className="base-node">
+		<div className={`base-node ${className}`}>
 			{displayBorderArea && (
 				<div className={`node-border-area ${borderAreaColor}`} />
 			)}
@@ -199,7 +200,7 @@ export default function BaseNode({
 			)}
 
 			<div
-				className={`node ${className}`}
+				className={`node ${nodeTypeClassName}`}
 				draghandle={dragHandle}
 				isconnectable={isConnectable?.toString()}
 				isdragging={isDragging?.toString()}
@@ -260,5 +261,6 @@ BaseNode.propTypes = {
 	icon: PropTypes.string.isRequired,
 	id: PropTypes.string,
 	label: PropTypes.object,
+	nodeTypeClassName: PropTypes.string,
 	type: PropTypes.string.isRequired,
 };
